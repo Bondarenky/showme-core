@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: showme
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/show_me
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mail:
+    host: localhost
+    port: 4025
+
+app:
+  path: http://localhost:8080
+  security:
+    jwt:
+      access:
+        secret: JWT_ACCESS_TOKEN_SECRET
+        expiration-ms: 86400000
