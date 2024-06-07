@@ -9,6 +9,8 @@ public record VideoResponseDto(
         String authorName,
         String authorImageUrl,
         int likes,
-        int dislikes
+        boolean isLiked,
+        int dislikes,
+        boolean isDisliked
 ) {
 }

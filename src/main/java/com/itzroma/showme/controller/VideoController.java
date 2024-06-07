@@ -34,7 +34,7 @@ public class VideoController {
     }
 
     @GetMapping("/{videoId}")
-    public ResponseEntity<VideoResponseDto> getVideo(@PathVariable String videoId) {
+    public ResponseEntity<VideoResponseDto> getVideo(@PathVariable String videoId, Authentication authentication) {
         Video video = videoService.findVideoById(videoId).orElseThrow(
                 () -> new NotFoundException("Video [%s] not found".formatted(videoId))
         );
@@ -47,7 +47,9 @@ public class VideoController {
                 video.getAuthor().getName(),
                 video.getAuthor().getImageUrl(),
                 video.getLikes().size(),
-                video.getDislikes().size()
+                video.getLikes().stream().map(User::getEmail).anyMatch(s -> s.equals(authentication.getName())),
+                video.getDislikes().size(),
+                video.getDislikes().stream().map(User::getEmail).anyMatch(s -> s.equals(authentication.getName()))
         );
         return ResponseEntity.ok(videoResponseDto);
     }
