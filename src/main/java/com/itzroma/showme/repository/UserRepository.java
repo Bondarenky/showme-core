@@ -33,6 +33,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query("UPDATE User u " +
             "SET u.imageUrl = NULL " +
-            "WHERE U.id = ?1")
+            "WHERE u.id = ?1")
     void updateImageByUserId(String userId);
 }

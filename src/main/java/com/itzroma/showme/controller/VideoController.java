@@ -1,6 +1,5 @@
 package com.itzroma.showme.controller;
 
-import com.itzroma.showme.domain.dto.response.CommentResponseDto;
 import com.itzroma.showme.domain.dto.response.VideoResponseDto;
 import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.domain.entity.Video;
@@ -40,22 +39,15 @@ public class VideoController {
                 () -> new NotFoundException("Video [%s] not found".formatted(videoId))
         );
         VideoResponseDto videoResponseDto = new VideoResponseDto(
-                videoId,
+                video.getId(),
+                video.getVideoUrl(),
                 video.getTitle(),
                 video.getDescription(),
                 video.getAuthor().getId(),
                 video.getAuthor().getName(),
                 video.getAuthor().getImageUrl(),
                 video.getLikes().size(),
-                video.getDislikes().size(),
-                video.getComments().stream()
-                        .map(comment -> new CommentResponseDto(
-                                comment.getId(),
-                                comment.getText(),
-                                comment.getAuthor().getId(),
-                                comment.getAuthor().getName(),
-                                comment.getAuthor().getImageUrl()
-                        )).toList()
+                video.getDislikes().size()
         );
         return ResponseEntity.ok(videoResponseDto);
     }
