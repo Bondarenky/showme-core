@@ -12,6 +12,9 @@ spring:
   mail:
     host: localhost
     port: 4025
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB
 
 app:
   path: http://localhost:8080
@@ -20,3 +23,10 @@ app:
       access:
         secret: JWT_ACCESS_TOKEN_SECRET
         expiration-ms: 86400000
+  aws:
+    s3:
+      path: http://localhost:4566
+      access-key: AAAAAAAAAAAAAAAAAAAA
+      secret-key: KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+      bucket-name: showme
+      region: eu-north-1

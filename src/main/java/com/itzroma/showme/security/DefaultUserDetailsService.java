@@ -1,6 +1,6 @@
 package com.itzroma.showme.security;
 
-import com.itzroma.showme.domain.User;
+import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

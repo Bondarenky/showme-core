@@ -1,7 +1,7 @@
 package com.itzroma.showme.service;
 
-import com.itzroma.showme.domain.EmailVerificationToken;
-import com.itzroma.showme.domain.User;
+import com.itzroma.showme.domain.entity.EmailVerificationToken;
+import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.exception.BadRequestException;
 import com.itzroma.showme.repository.EmailVerificationTokenRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,12 +1,14 @@
 package com.itzroma.showme.service;
 
-import com.itzroma.showme.domain.User;
+import com.itzroma.showme.domain.FileType;
+import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.exception.BadRequestException;
 import com.itzroma.showme.repository.UserRepository;
 import com.itzroma.showme.util.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,6 +18,7 @@ import java.util.UUID;
 public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AmazonS3Service amazonS3Service;
 
     @Override
     public User save(User user) {
@@ -37,6 +40,18 @@ public class DefaultUserService implements UserService {
     @Override
     public void enable(UUID id) {
         userRepository.enable(id.toString());
+    }
+
+    @Override
+    public String updateImage(String userId, MultipartFile file) {
+        String imageUrl = amazonS3Service.uploadFile(file, FileType.AVATAR, userId);
+        userRepository.updateImage(userId, imageUrl);
+        return imageUrl;
+    }
+
+    @Override
+    public String deleteImage(String userId) {
+        return "";
     }
 
     private void validateUser(User user) {

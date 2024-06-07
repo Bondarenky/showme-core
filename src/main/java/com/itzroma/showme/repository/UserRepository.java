@@ -1,6 +1,6 @@
 package com.itzroma.showme.repository;
 
-import com.itzroma.showme.domain.User;
+import com.itzroma.showme.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +21,18 @@ public interface UserRepository extends JpaRepository<User, String> {
             "SET u.enabled = TRUE " +
             "WHERE u.id = ?1")
     void enable(String id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u " +
+            "SET u.imageUrl = ?2 " +
+            "WHERE u.id = ?1")
+    void updateImage(String userId, String imageUrl);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u " +
+            "SET u.imageUrl = NULL " +
+            "WHERE U.id = ?1")
+    void updateImageByUserId(String userId);
 }

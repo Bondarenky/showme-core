@@ -1,7 +1,8 @@
 package com.itzroma.showme.service;
 
-import com.itzroma.showme.domain.EmailVerificationToken;
-import com.itzroma.showme.domain.User;
+import com.itzroma.showme.domain.dto.response.SignInResponseDto;
+import com.itzroma.showme.domain.entity.EmailVerificationToken;
+import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.email.event.EmailVerificationEvent;
 import com.itzroma.showme.exception.BadRequestException;
 import com.itzroma.showme.security.DefaultUserDetails;
@@ -50,7 +51,7 @@ public class DefaultAuthService implements AuthService {
     }
 
     @Override
-    public String signIn(String email, String password) {
+    public SignInResponseDto signIn(String email, String password) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
@@ -61,10 +62,13 @@ public class DefaultAuthService implements AuthService {
             throw new BadRequestException("Your account is disabled");
         }
 
+        User user = userService.findByEmail(email).orElseThrow(() -> new BadRequestException("Bad Credentials"));
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDetails.getUsername(), password)
         );
-        return jwtProvider.generateAccessToken((DefaultUserDetails) authentication.getPrincipal());
+
+        return new SignInResponseDto(user.getId(), jwtProvider.generateAccessToken((DefaultUserDetails) authentication.getPrincipal()));
     }
 
     private void sendEmailVerificationToken(User forUser, EmailVerificationToken token) {

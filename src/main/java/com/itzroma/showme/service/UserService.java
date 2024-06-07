@@ -1,6 +1,7 @@
 package com.itzroma.showme.service;
 
-import com.itzroma.showme.domain.User;
+import com.itzroma.showme.domain.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -13,4 +14,8 @@ public interface UserService {
     Optional<User> findByEmail(String email);
 
     void enable(UUID id);
+
+    String updateImage(String userId, MultipartFile file);
+
+    String deleteImage(String userId);
 }

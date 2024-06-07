@@ -1,4 +1,4 @@
-package com.itzroma.showme.domain;
+package com.itzroma.showme.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

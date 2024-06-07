@@ -1,7 +1,7 @@
 package com.itzroma.showme.email.event;
 
-import com.itzroma.showme.domain.EmailVerificationToken;
-import com.itzroma.showme.domain.User;
+import com.itzroma.showme.domain.entity.EmailVerificationToken;
+import com.itzroma.showme.domain.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;

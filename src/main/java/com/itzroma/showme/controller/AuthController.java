@@ -1,9 +1,9 @@
 package com.itzroma.showme.controller;
 
-import com.itzroma.showme.domain.User;
 import com.itzroma.showme.domain.dto.request.SignInRequestDto;
 import com.itzroma.showme.domain.dto.request.SignUpRequestDto;
 import com.itzroma.showme.domain.dto.response.SignInResponseDto;
+import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.exception.BadRequestException;
 import com.itzroma.showme.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,6 @@ public class AuthController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<SignInResponseDto> signIn(@RequestBody SignInRequestDto dto) {
-        String accessToken = authService.signIn(dto.email(), dto.password());
-        return ResponseEntity.ok(new SignInResponseDto(accessToken));
+        return ResponseEntity.ok(authService.signIn(dto.email(), dto.password()));
     }
 }
