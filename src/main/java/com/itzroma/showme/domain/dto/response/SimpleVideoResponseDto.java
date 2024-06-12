@@ -5,6 +5,7 @@ public record SimpleVideoResponseDto(
         String videoPreviewUrl,
         String videoTitle,
         String userId,
-        String userName
+        String userName,
+        String userImageUrl
 ) {
 }

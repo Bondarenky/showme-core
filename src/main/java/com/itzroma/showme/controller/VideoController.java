@@ -109,7 +109,8 @@ public class VideoController {
                         video.getPreviewUrl(),
                         video.getTitle(),
                         video.getAuthor().getId(),
-                        video.getAuthor().getName()
+                        video.getAuthor().getName(),
+                        video.getAuthor().getImageUrl()
                 ))
                 .toList();
         return ResponseEntity.ok(response);

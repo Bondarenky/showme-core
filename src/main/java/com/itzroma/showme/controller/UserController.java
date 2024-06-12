@@ -33,7 +33,8 @@ public class UserController {
                         video.getPreviewUrl(),
                         video.getTitle(),
                         video.getAuthor().getId(),
-                        video.getAuthor().getName()
+                        video.getAuthor().getName(),
+                        video.getAuthor().getImageUrl()
                 ))
                 .toList();
         return ResponseEntity.ok(new UserProfileResponseDto(user.getId(), user.getName(), user.getEmail(), user.getImageUrl(), videos));
