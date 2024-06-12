@@ -46,6 +46,12 @@ public class Video {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
+    @ManyToMany
+    @JoinTable(name = "video_video_types",
+            joinColumns = @JoinColumn(name = "video_id"),
+            inverseJoinColumns = @JoinColumn(name = "video_type_id"))
+    private Set<VideoType> videoTypes;
+
     public Video(String videoUrl, String previewUrl, String title, String description, User author) {
         this.videoUrl = videoUrl;
         this.previewUrl = previewUrl;

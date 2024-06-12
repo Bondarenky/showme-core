@@ -3,16 +3,22 @@ package com.itzroma.showme.controller;
 import com.itzroma.showme.domain.dto.response.VideoResponseDto;
 import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.domain.entity.Video;
+import com.itzroma.showme.domain.entity.VideoType;
 import com.itzroma.showme.exception.NotFoundException;
 import com.itzroma.showme.exception.UnauthorizedException;
 import com.itzroma.showme.service.UserService;
 import com.itzroma.showme.service.VideoService;
+import com.itzroma.showme.service.VideoTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class VideoController {
     private final UserService userService;
     private final VideoService videoService;
+    private final VideoTypeService videoTypeService;
 
     @Operation(summary = "Upload a video")
     @PostMapping
@@ -27,11 +34,17 @@ public class VideoController {
                                               @RequestParam("preview") MultipartFile preview,
                                               @RequestParam("title") String title,
                                               @RequestParam("description") String description,
+                                              @RequestParam("types") String videoTypes,
                                               Authentication authentication) {
         User user = userService.findByEmail(authentication.getName()).orElseThrow(
                 () -> new UnauthorizedException("Unauthorized")
         );
-        Video uploadedVideo = videoService.uploadVideo(video, preview, user, title, description);
+        List<VideoType> types = Arrays.stream(videoTypes.split(","))
+                .map(String::toLowerCase)
+                .map(StringUtils::capitalize)
+                .map(s -> videoTypeService.save(new VideoType(s)))
+                .toList();
+        Video uploadedVideo = videoService.uploadVideo(video, preview, user, title, description, types);
         return ResponseEntity.ok("Video uploaded: " + uploadedVideo.getTitle());
     }
 

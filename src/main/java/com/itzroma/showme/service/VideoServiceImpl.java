@@ -3,12 +3,14 @@ package com.itzroma.showme.service;
 import com.itzroma.showme.domain.FileType;
 import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.domain.entity.Video;
+import com.itzroma.showme.domain.entity.VideoType;
 import com.itzroma.showme.repository.UserRepository;
 import com.itzroma.showme.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +21,8 @@ public class VideoServiceImpl implements VideoService {
     private final UserRepository userRepository;
 
     @Override
-    public Video uploadVideo(MultipartFile video, MultipartFile preview, User author, String title, String description) {
+    public Video uploadVideo(MultipartFile video, MultipartFile preview,
+                             User author, String title, String description, List<VideoType> videoTypes) {
         String videoUrl = s3Service.uploadFile(video, FileType.VIDEO, author.getId());
         String previewUrl = s3Service.uploadFile(preview, FileType.PREVIEW, author.getId());
         return videoRepository.save(new Video(videoUrl, previewUrl, title, description, author));
