@@ -4,9 +4,9 @@ import com.itzroma.showme.domain.dto.response.SignInResponseDto;
 import com.itzroma.showme.domain.entity.User;
 
 public interface AuthService {
-    User signUp(User user);
+    User signUpUser(User user);
 
-    boolean verifyEmailVerificationToken(String token);
+    boolean verifyRegistration(String token);
 
-    SignInResponseDto signIn(String email, String password);
+    SignInResponseDto signInUser(String email, String password);
 }

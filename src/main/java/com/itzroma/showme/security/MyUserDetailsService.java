@@ -12,16 +12,13 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultUserDetailsService implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService {
     private final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByEmail(username).orElseThrow(
-                () -> new UsernameNotFoundException("User with email [%s] not found".formatted(username))
-        );
-
-        return DefaultUserDetails.builder()
+        User user = userService.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return MyUserDetails.builder()
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .enabled(user.isEnabled())

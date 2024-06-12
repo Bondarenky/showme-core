@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Builder
-public class DefaultUserDetails implements UserDetails {
+public class MyUserDetails implements UserDetails {
     private String email;
     private String password;
     private Boolean enabled;

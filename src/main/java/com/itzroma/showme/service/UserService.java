@@ -16,6 +16,4 @@ public interface UserService {
     void enable(UUID id);
 
     String updateImage(String userId, MultipartFile file);
-
-    String deleteImage(String userId);
 }

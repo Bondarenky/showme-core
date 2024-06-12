@@ -19,10 +19,10 @@ public class SqlEventInitializer {
                 "DO BEGIN " +
                 "DROP TEMPORARY TABLE IF EXISTS evts; " +
                 "CREATE TEMPORARY TABLE IF NOT EXISTS evts AS (SELECT id, user_id " +
-                "FROM email_verification_tokens " +
+                "FROM verification_tokens " +
                 "WHERE expires_at < NOW() " +
                 "AND confirmed_at IS NULL); " +
-                "DELETE FROM email_verification_tokens " +
+                "DELETE FROM verification_tokens " +
                 "WHERE id IN (SELECT e.id FROM evts e); " +
                 "DELETE FROM users " +
                 "WHERE id IN (SELECT user_id FROM evts); " +

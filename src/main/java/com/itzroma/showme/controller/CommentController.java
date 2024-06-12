@@ -8,6 +8,7 @@ import com.itzroma.showme.exception.UnauthorizedException;
 import com.itzroma.showme.service.CommentService;
 import com.itzroma.showme.service.UserService;
 import com.itzroma.showme.service.VideoService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ public class CommentController {
     private final UserService userService;
     private final VideoService videoService;
 
+    @Operation(summary = "Add comment to the video")
     @PostMapping("/{videoId}")
     public ResponseEntity<String> addComment(@PathVariable("videoId") String videoId,
                                              @RequestBody String text,

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultVideoService implements VideoService {
+public class VideoServiceImpl implements VideoService {
     private final AmazonS3Service s3Service;
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;

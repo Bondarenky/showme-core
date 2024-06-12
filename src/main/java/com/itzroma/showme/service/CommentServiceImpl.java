@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultCommentService implements CommentService {
+public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override

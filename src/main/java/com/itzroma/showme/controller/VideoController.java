@@ -7,6 +7,7 @@ import com.itzroma.showme.exception.NotFoundException;
 import com.itzroma.showme.exception.UnauthorizedException;
 import com.itzroma.showme.service.UserService;
 import com.itzroma.showme.service.VideoService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ public class VideoController {
     private final UserService userService;
     private final VideoService videoService;
 
+    @Operation(summary = "Upload a video")
     @PostMapping
     public ResponseEntity<String> uploadVideo(@RequestParam("video") MultipartFile video,
                                               @RequestParam("preview") MultipartFile preview,
@@ -33,6 +35,7 @@ public class VideoController {
         return ResponseEntity.ok("Video uploaded: " + uploadedVideo.getTitle());
     }
 
+    @Operation(summary = "Get video by id")
     @GetMapping("/{videoId}")
     public ResponseEntity<VideoResponseDto> getVideo(@PathVariable String videoId, Authentication authentication) {
         Video video = videoService.findVideoById(videoId).orElseThrow(
@@ -54,6 +57,7 @@ public class VideoController {
         return ResponseEntity.ok(videoResponseDto);
     }
 
+    @Operation(summary = "Toggle like on the video by its id")
     @PostMapping("/{videoId}/toggle-like")
     public ResponseEntity<String> toggleLike(@PathVariable("videoId") String videoId, Authentication authentication) {
         User user = userService.findByEmail(authentication.getName()).orElseThrow(
@@ -66,6 +70,7 @@ public class VideoController {
         return ResponseEntity.ok("Like toggled on video: " + video.getTitle());
     }
 
+    @Operation(summary = "Toggle dislike on the video by its id")
     @PostMapping("/{videoId}/toggle-dislike")
     public ResponseEntity<String> toggleDislike(@PathVariable("videoId") String videoId, Authentication authentication) {
         User user = userService.findByEmail(authentication.getName()).orElseThrow(

@@ -9,13 +9,13 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Slf4j
-@Component
-public class JwtProvider {
+@Service
+public class JwtService {
     @Value("${app.security.jwt.access.secret}")
     private String accessSecret;
 
@@ -29,7 +29,7 @@ public class JwtProvider {
         accessAlgorithm = Algorithm.HMAC512(accessSecret);
     }
 
-    public String generateAccessToken(DefaultUserDetails authUserDetails) {
+    public String generateAccessToken(MyUserDetails authUserDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationMs);
 
@@ -45,7 +45,7 @@ public class JwtProvider {
         return verifier.verify(token).getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateJwt(String token) {
         try {
             JWT.require(accessAlgorithm).build().verify(token);
             return true;

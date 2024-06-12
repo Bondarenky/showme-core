@@ -9,9 +9,9 @@ import java.time.temporal.ChronoUnit;
 
 @Getter
 @Entity
-@Table(name = "email_verification_tokens")
+@Table(name = "verification_tokens")
 @NoArgsConstructor
-public class EmailVerificationToken {
+public class VerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -19,15 +19,14 @@ public class EmailVerificationToken {
     @Column(unique = true, nullable = false)
     private String token;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
-    @Column(name = "expires_at", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime expiresAt;
 
-    @Column(name = "confirmed_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime confirmedAt;
 
@@ -35,12 +34,10 @@ public class EmailVerificationToken {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public EmailVerificationToken(String token, User user) {
+    public VerificationToken(String token, User user) {
         this.token = token;
         this.user = user;
         createdAt = LocalDateTime.now();
-
-        // TODO: 8/25/2023 think how to replace hardcoded value
-        expiresAt = createdAt.plus(600_000, ChronoUnit.MILLIS);
+        expiresAt = createdAt.plus(900_000, ChronoUnit.MILLIS);
     }
 }

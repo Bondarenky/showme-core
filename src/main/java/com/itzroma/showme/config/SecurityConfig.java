@@ -1,6 +1,7 @@
 package com.itzroma.showme.config;
 
-import com.itzroma.showme.security.JwtAuthenticationFilter;
+import com.itzroma.showme.security.JwtAuthFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -23,16 +24,26 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private static final String[] PUBLIC_MATCHERS = {
+            "/auth/**",
+            "/test/all",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+    };
+
+    @Value("${app.ui-path}")
+    private String uiPath;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(config -> config
-                        .requestMatchers("/auth/**", "/test/all").permitAll()
+                        .requestMatchers(PUBLIC_MATCHERS).permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -42,7 +53,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authManager(UserDetailsService userDetailsService) {
+    public AuthenticationManager daoAuthenticationProvider(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
         daoProvider.setUserDetailsService(userDetailsService);
         daoProvider.setPasswordEncoder(passwordEncoder());
@@ -55,8 +66,12 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
-                        .allowedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, HttpHeaders.CONTENT_TYPE)
+                        .allowedOrigins(uiPath)
+                        .allowedHeaders(
+                                HttpHeaders.AUTHORIZATION,
+                                HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
+                                HttpHeaders.CONTENT_TYPE
+                        )
                         .allowedMethods(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),

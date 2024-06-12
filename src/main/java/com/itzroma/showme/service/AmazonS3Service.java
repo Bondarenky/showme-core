@@ -35,7 +35,7 @@ public class AmazonS3Service {
             File file = convertMultipartFileToIOFile(multipartFile);
             uploadFileToS3Bucket(fileName, file);
             file.delete();
-            return constructFileUrl(fileName);
+            return path + "/" + bucketName + "/" + fileName;
         } catch (IOException e) {
             log.error("Failed to upload file to S3 bucket: {}", e.getLocalizedMessage());
             throw new RuntimeException("Failed to upload file to S3 bucket: " + e.getLocalizedMessage(), e);
@@ -65,9 +65,5 @@ public class AmazonS3Service {
         }
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-    }
-
-    private String constructFileUrl(String fileName) {
-        return path + "/" + bucketName + "/" + fileName;
     }
 }

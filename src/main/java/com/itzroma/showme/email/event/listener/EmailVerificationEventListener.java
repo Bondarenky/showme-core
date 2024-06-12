@@ -15,7 +15,7 @@ public class EmailVerificationEventListener {
 
     @EventListener
     public void onApplicationEvent(EmailVerificationEvent event) {
-        String url = event.getUrl() + "/verify?token=" + event.getEmailVerificationToken().getToken();
+        String url = event.getUrl() + "/verify?token=" + event.getVerificationToken().getToken();
         String userEmail = event.getUser().getEmail();
 
         long expirationMinutes = TimeUnit.MINUTES.toMillis(10);

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultUserService implements UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3Service amazonS3Service;
@@ -49,38 +49,24 @@ public class DefaultUserService implements UserService {
         return imageUrl;
     }
 
-    @Override
-    public String deleteImage(String userId) {
-        return "";
-    }
-
     private void validateUser(User user) {
-        validateRequiredFields(user);
-
-        if (!FieldValidator.validateEmail(user.getEmail())) {
-            throw new BadRequestException("Invalid email: " + user.getEmail());
-        }
-
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new BadRequestException("Email already in use: " + user.getEmail());
-        }
-
-        if (!FieldValidator.validatePassword(user.getPassword(), false)) {
-            throw new BadRequestException("Invalid password: " + user.getPassword());
-        }
-    }
-
-    private void validateRequiredFields(User user) {
         if (FieldValidator.validateStringEmpty(user.getName())) {
             throw new BadRequestException("Name is required");
         }
-
         if (FieldValidator.validateStringEmpty(user.getEmail())) {
             throw new BadRequestException("Email is required");
         }
-
         if (FieldValidator.validateStringEmpty(user.getPassword())) {
             throw new BadRequestException("Password is required");
+        }
+        if (!FieldValidator.validateEmail(user.getEmail())) {
+            throw new BadRequestException("Invalid email: " + user.getEmail());
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new BadRequestException("Email already in use: " + user.getEmail());
+        }
+        if (!FieldValidator.validatePassword(user.getPassword(), false)) {
+            throw new BadRequestException("Invalid password: " + user.getPassword());
         }
     }
 }
