@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,5 +68,12 @@ public class VideoServiceImpl implements VideoService {
         }
         videoRepository.save(video);
         userRepository.save(user);
+    }
+
+    @Override
+    public List<Video> findBySearchTextAndTypes(String searchText, List<VideoType> videoTypes) {
+        return videoRepository.findByAuthor_NameContainingIgnoreCaseOrTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndVideoTypes(
+                searchText, searchText, searchText, new HashSet<>(videoTypes)
+        );
     }
 }

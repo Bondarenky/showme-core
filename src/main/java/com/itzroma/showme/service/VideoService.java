@@ -17,4 +17,6 @@ public interface VideoService {
     void toggleLike(User user, Video video);
 
     void toggleDislike(User user, Video video);
+
+    List<Video> findBySearchTextAndTypes(String searchText, List<VideoType> videoTypes);
 }

@@ -1,5 +1,7 @@
 package com.itzroma.showme.controller;
 
+import com.itzroma.showme.domain.dto.request.FindVideosRequestDto;
+import com.itzroma.showme.domain.dto.response.SimpleVideoResponseDto;
 import com.itzroma.showme.domain.dto.response.VideoResponseDto;
 import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.domain.entity.Video;
@@ -94,5 +96,21 @@ public class VideoController {
         );
         videoService.toggleDislike(user, video);
         return ResponseEntity.ok("Dislike toggled on video: " + video.getTitle());
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<List<SimpleVideoResponseDto>> find(@RequestBody FindVideosRequestDto dto) {
+        List<VideoType> videoTypes = videoTypeService.findAllByNames(dto.types());
+        List<Video> videos = videoService.findBySearchTextAndTypes(dto.searchText(), videoTypes);
+        List<SimpleVideoResponseDto> response = videos.stream()
+                .map(video -> new SimpleVideoResponseDto(
+                        video.getId(),
+                        video.getPreviewUrl(),
+                        video.getTitle(),
+                        video.getAuthor().getId(),
+                        video.getAuthor().getName()
+                ))
+                .toList();
+        return ResponseEntity.ok(response);
     }
 }
