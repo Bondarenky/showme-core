@@ -72,7 +72,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public List<Video> findBySearchTextAndTypes(String searchText, List<VideoType> videoTypes) {
-        return videoRepository.findByAuthor_NameContainingIgnoreCaseOrTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndVideoTypes(
+        return videoRepository.findByAuthor_NameContainingIgnoreCaseOrTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndVideoTypesOrderByCreatedAt(
                 searchText, searchText, searchText, new HashSet<>(videoTypes)
         );
     }

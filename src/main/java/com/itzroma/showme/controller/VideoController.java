@@ -42,6 +42,7 @@ public class VideoController {
                 () -> new UnauthorizedException("Unauthorized")
         );
         List<VideoType> types = Arrays.stream(videoTypes.split(","))
+                .map(String::trim)
                 .map(String::toLowerCase)
                 .map(StringUtils::capitalize)
                 .map(s -> videoTypeService.save(new VideoType(s)))
