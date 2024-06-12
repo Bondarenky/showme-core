@@ -101,8 +101,8 @@ public class VideoController {
 
     @PostMapping("/list")
     public ResponseEntity<List<SimpleVideoResponseDto>> find(@RequestBody FindVideosRequestDto dto) {
-        List<VideoType> videoTypes = videoTypeService.findAllByNames(dto.types());
-        List<Video> videos = videoService.findBySearchTextAndTypes(dto.searchText(), videoTypes);
+        VideoType videoType = videoTypeService.findByName(dto.type()).orElse(null);
+        List<Video> videos = videoService.findBySearchTextAndTypes(dto.searchText(), videoType);
         List<SimpleVideoResponseDto> response = videos.stream()
                 .map(video -> new SimpleVideoResponseDto(
                         video.getId(),

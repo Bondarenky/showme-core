@@ -2,8 +2,8 @@ package com.itzroma.showme.service;
 
 import com.itzroma.showme.domain.entity.VideoType;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface VideoTypeService {
     VideoType save(VideoType videoType);
@@ -12,5 +12,5 @@ public interface VideoTypeService {
 
     List<VideoType> findAll();
 
-    List<VideoType> findAllByNames(Collection<String> names);
+    Optional<VideoType> findByName(String name);
 }

@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -36,7 +36,7 @@ public class VideoTypeServiceImpl implements VideoTypeService {
     }
 
     @Override
-    public List<VideoType> findAllByNames(Collection<String> names) {
-        return videoTypeRepository.findByNameIn(names);
+    public Optional<VideoType> findByName(String name) {
+        return videoTypeRepository.findByName(name);
     }
 }
