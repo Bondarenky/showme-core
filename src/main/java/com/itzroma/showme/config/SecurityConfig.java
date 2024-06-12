@@ -24,13 +24,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private static final String[] PUBLIC_MATCHERS = {
-            "/auth/**",
-            "/test/all",
-            "/swagger-ui/**",
-            "/v3/api-docs/**"
-    };
-
     @Value("${app.ui-path}")
     private String uiPath;
 
@@ -39,10 +32,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(config -> config
-                        .requestMatchers(PUBLIC_MATCHERS).permitAll()
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(config -> config.anyRequest().permitAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -16,4 +16,8 @@ public interface UserService {
     void enable(UUID id);
 
     String updateImage(String userId, MultipartFile file);
+
+    String subscribe(User user, User... subscribeTo);
+
+    String unsubscribe(User user, User... unsubscribeFrom);
 }

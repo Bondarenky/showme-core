@@ -10,8 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +50,28 @@ public class UserServiceImpl implements UserService {
         String imageUrl = amazonS3Service.uploadFile(file, FileType.AVATAR, userId);
         userRepository.updateImage(userId, imageUrl);
         return imageUrl;
+    }
+
+    @Override
+    public String subscribe(User user, User... subscribeTo) {
+        user.getSubscriptions().addAll(Set.of(subscribeTo));
+        userRepository.save(user);
+
+        Arrays.stream(subscribeTo).forEach(User::incrementSubscribers);
+        userRepository.saveAll(Set.of(subscribeTo));
+
+        return "Subscribed to " + Arrays.stream(subscribeTo).map(User::getName).collect(Collectors.joining(", "));
+    }
+
+    @Override
+    public String unsubscribe(User user, User... unsubscribeFrom) {
+        user.getSubscriptions().removeAll(Set.of(unsubscribeFrom));
+        userRepository.save(user);
+
+        Arrays.stream(unsubscribeFrom).forEach(User::decrementSubscribers);
+        userRepository.saveAll(Set.of(unsubscribeFrom));
+
+        return "Unsubscribed from " + Arrays.stream(unsubscribeFrom).map(User::getName).collect(Collectors.joining(", "));
     }
 
     private void validateUser(User user) {
