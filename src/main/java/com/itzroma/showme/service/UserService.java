@@ -1,6 +1,7 @@
 package com.itzroma.showme.service;
 
 import com.itzroma.showme.domain.entity.User;
+import com.itzroma.showme.domain.entity.Video;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -20,4 +21,6 @@ public interface UserService {
     String subscribe(User user, User... subscribeTo);
 
     String unsubscribe(User user, User... unsubscribeFrom);
+
+    void updateHistory(User user, Video video);
 }

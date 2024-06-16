@@ -56,6 +56,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "subscribed_to_id"))
     private Set<User> subscriptions = new LinkedHashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "history",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "video_id"))
+    private Set<Video> history = new LinkedHashSet<>();
+
     private Long subscribersCount = 0L;
 
     public User(String name, String email, String password) {

@@ -2,6 +2,7 @@ package com.itzroma.showme.service;
 
 import com.itzroma.showme.domain.FileType;
 import com.itzroma.showme.domain.entity.User;
+import com.itzroma.showme.domain.entity.Video;
 import com.itzroma.showme.exception.BadRequestException;
 import com.itzroma.showme.repository.UserRepository;
 import com.itzroma.showme.util.FieldValidator;
@@ -72,6 +73,13 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAll(Set.of(unsubscribeFrom));
 
         return "Unsubscribed from " + Arrays.stream(unsubscribeFrom).map(User::getName).collect(Collectors.joining(", "));
+    }
+
+    @Override
+    public void updateHistory(User user, Video video) {
+        user.getHistory().remove(video);
+        user.getHistory().add(video);
+        userRepository.save(user);
     }
 
     private void validateUser(User user) {

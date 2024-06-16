@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -58,6 +59,7 @@ public class VideoController {
                 () -> new NotFoundException("Video [%s] not found".formatted(videoId))
         );
         User user = userService.findByEmail(authentication.getName()).orElseThrow(() -> new UnauthorizedException("Unauthorized"));
+        userService.updateHistory(user, video);
         VideoResponseDto videoResponseDto = new VideoResponseDto(
                 video.getId(),
                 video.getVideoUrl(),
@@ -132,5 +134,22 @@ public class VideoController {
                 ))
                 .toList();
         return ResponseEntity.ok(likedVideos);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<SimpleVideoResponseDto>> getHistory(Authentication authentication) {
+        User user = userService.findByEmail(authentication.getName()).orElseThrow(() -> new UnauthorizedException("Unauthorized"));
+        List<SimpleVideoResponseDto> history = user.getHistory().stream()
+                .sorted(Collections.reverseOrder())
+                .map(video -> new SimpleVideoResponseDto(
+                        video.getId(),
+                        video.getPreviewUrl(),
+                        video.getTitle(),
+                        video.getAuthor().getId(),
+                        video.getAuthor().getName(),
+                        video.getAuthor().getImageUrl()
+                ))
+                .toList();
+        return ResponseEntity.ok(history);
     }
 }
