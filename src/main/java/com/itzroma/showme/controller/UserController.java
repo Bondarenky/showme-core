@@ -1,6 +1,7 @@
 package com.itzroma.showme.controller;
 
 import com.itzroma.showme.domain.dto.response.SimpleVideoResponseDto;
+import com.itzroma.showme.domain.dto.response.SubVideoResponseDto;
 import com.itzroma.showme.domain.dto.response.SubscriberResponseDto;
 import com.itzroma.showme.domain.dto.response.UserProfileResponseDto;
 import com.itzroma.showme.domain.entity.User;
@@ -69,5 +70,19 @@ public class UserController {
                 .map(user -> new SubscriberResponseDto(user.getId(), user.getName(), user.getImageUrl()))
                 .toList();
         return ResponseEntity.ok(subs);
+    }
+
+    @GetMapping("/{userId}/subs-videos")
+    public ResponseEntity<List<SubVideoResponseDto>> findSubsVideos(@PathVariable String userId) {
+        User user = userService.findById(userId).orElseThrow(() -> new NotFoundException("User [%s] not found".formatted(userId)));
+        List<SubVideoResponseDto> subsVideos = user.getSubscriptions().stream()
+                .map(sub -> {
+                    List<SimpleVideoResponseDto> subVideos = sub.getMyVideos().stream()
+                            .map(video -> new SimpleVideoResponseDto(video.getId(), video.getVideoUrl(), video.getTitle(), sub.getId(), sub.getName(), sub.getImageUrl()))
+                            .toList();
+                    return new SubVideoResponseDto(sub.getId(), sub.getName(), subVideos);
+                })
+                .toList();
+        return ResponseEntity.ok(subsVideos);
     }
 }
