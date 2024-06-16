@@ -52,7 +52,7 @@ public class VideoController {
     }
 
     @Operation(summary = "Get video by id")
-    @GetMapping("/{videoId}")
+    @GetMapping("/one/{videoId}")
     public ResponseEntity<VideoResponseDto> getVideo(@PathVariable String videoId, Authentication authentication) {
         Video video = videoService.findVideoById(videoId).orElseThrow(
                 () -> new NotFoundException("Video [%s] not found".formatted(videoId))
@@ -114,5 +114,21 @@ public class VideoController {
                 ))
                 .toList();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/liked")
+    public ResponseEntity<List<SimpleVideoResponseDto>> getLikedVideos(Authentication authentication) {
+        User user = userService.findByEmail(authentication.getName()).orElseThrow(() -> new UnauthorizedException("Unauthorized"));
+        List<SimpleVideoResponseDto> likedVideos = user.getLikedVideos().stream()
+                .map(video -> new SimpleVideoResponseDto(
+                        video.getId(),
+                        video.getPreviewUrl(),
+                        video.getTitle(),
+                        video.getAuthor().getId(),
+                        video.getAuthor().getName(),
+                        video.getAuthor().getImageUrl()
+                ))
+                .toList();
+        return ResponseEntity.ok(likedVideos);
     }
 }
