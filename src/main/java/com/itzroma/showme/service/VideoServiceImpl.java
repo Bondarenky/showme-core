@@ -25,7 +25,7 @@ public class VideoServiceImpl implements VideoService {
                              User author, String title, String description, List<VideoType> videoTypes) {
         String videoUrl = s3Service.uploadFile(video, FileType.VIDEO, author.getId());
         String previewUrl = s3Service.uploadFile(preview, FileType.PREVIEW, author.getId());
-        return videoRepository.save(new Video(videoUrl, previewUrl, title, description, author));
+        return videoRepository.save(new Video(videoUrl, previewUrl, title, description, author, videoTypes));
     }
 
     @Override
@@ -71,6 +71,9 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public List<Video> findBySearchTextAndTypes(String searchText, VideoType videoType) {
-        return videoRepository.findBySearchTextAndType(searchText, videoType);
+        if (videoType == null) {
+            return videoRepository.findBySearchText(searchText);
+        }
+        return videoRepository.findBySearchTextAndVideoType("%" + searchText + "%", videoType);
     }
 }

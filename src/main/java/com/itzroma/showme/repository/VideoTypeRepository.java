@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface VideoTypeRepository extends JpaRepository<VideoType, String> {
-    Optional<VideoType> findByName(String name);
+    Optional<VideoType> findByNameIgnoreCase(String name);
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -52,12 +54,13 @@ public class Video {
             inverseJoinColumns = @JoinColumn(name = "video_type_id"))
     private Set<VideoType> videoTypes;
 
-    public Video(String videoUrl, String previewUrl, String title, String description, User author) {
+    public Video(String videoUrl, String previewUrl, String title, String description, User author, List<VideoType> videoTypes) {
         this.videoUrl = videoUrl;
         this.previewUrl = previewUrl;
         this.title = title;
         this.description = description;
         this.author = author;
+        this.videoTypes = new HashSet<>(videoTypes);
     }
 
     @PrePersist

@@ -18,7 +18,7 @@ public class VideoTypeServiceImpl implements VideoTypeService {
     @Override
     public VideoType save(VideoType videoType) {
         AtomicReference<VideoType> toReturn = new AtomicReference<>();
-        videoTypeRepository.findByName(videoType.getName()).ifPresentOrElse(
+        videoTypeRepository.findByNameIgnoreCase(videoType.getName()).ifPresentOrElse(
                 toReturn::set,
                 () -> toReturn.set(videoTypeRepository.save(videoType))
         );
@@ -37,6 +37,6 @@ public class VideoTypeServiceImpl implements VideoTypeService {
 
     @Override
     public Optional<VideoType> findByName(String name) {
-        return videoTypeRepository.findByName(name);
+        return videoTypeRepository.findByNameIgnoreCase(name);
     }
 }
