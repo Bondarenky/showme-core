@@ -81,7 +81,14 @@ public class UserController {
         List<SubVideoResponseDto> subsVideos = user.getSubscriptions().stream()
                 .map(sub -> {
                     List<SimpleVideoResponseDto> subVideos = sub.getMyVideos().stream()
-                            .map(video -> new SimpleVideoResponseDto(video.getId(), video.getVideoUrl(), video.getTitle(), sub.getId(), sub.getName(), sub.getImageUrl()))
+                            .map(video -> new SimpleVideoResponseDto(
+                                    video.getId(),
+                                    video.getPreviewUrl(),
+                                    video.getTitle(),
+                                    sub.getId(),
+                                    sub.getName(),
+                                    sub.getImageUrl()
+                            ))
                             .toList();
                     return new SubVideoResponseDto(sub.getId(), sub.getName(), subVideos);
                 })
