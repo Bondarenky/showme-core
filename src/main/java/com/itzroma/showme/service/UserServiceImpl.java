@@ -1,6 +1,7 @@
 package com.itzroma.showme.service;
 
 import com.itzroma.showme.domain.FileType;
+import com.itzroma.showme.domain.entity.HistoryEntry;
 import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.domain.entity.Video;
 import com.itzroma.showme.exception.BadRequestException;
@@ -11,7 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3Service amazonS3Service;
+    private final HistoryEntryService historyEntryService;
 
     @Override
     public User save(User user) {
@@ -74,9 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateHistory(User user, Video video) {
-        user.getHistory().remove(video);
-        user.getHistory().add(0, video);
-        userRepository.save(user);
+        historyEntryService.save(new HistoryEntry(user.getId(), video.getId()));
     }
 
     private void validateUser(User user) {

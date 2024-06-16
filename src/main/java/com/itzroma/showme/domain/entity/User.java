@@ -56,12 +56,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "subscribed_to_id"))
     private List<User> subscriptions = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "history",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "video_id"))
-    private List<Video> history = new ArrayList<>();
-
     private Long subscribersCount = 0L;
 
     public User(String name, String email, String password) {

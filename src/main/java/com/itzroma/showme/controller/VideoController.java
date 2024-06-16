@@ -3,11 +3,13 @@ package com.itzroma.showme.controller;
 import com.itzroma.showme.domain.dto.request.FindVideosRequestDto;
 import com.itzroma.showme.domain.dto.response.SimpleVideoResponseDto;
 import com.itzroma.showme.domain.dto.response.VideoResponseDto;
+import com.itzroma.showme.domain.entity.HistoryEntry;
 import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.domain.entity.Video;
 import com.itzroma.showme.domain.entity.VideoType;
 import com.itzroma.showme.exception.NotFoundException;
 import com.itzroma.showme.exception.UnauthorizedException;
+import com.itzroma.showme.service.HistoryEntryService;
 import com.itzroma.showme.service.UserService;
 import com.itzroma.showme.service.VideoService;
 import com.itzroma.showme.service.VideoTypeService;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -29,6 +32,7 @@ public class VideoController {
     private final UserService userService;
     private final VideoService videoService;
     private final VideoTypeService videoTypeService;
+    private final HistoryEntryService historyEntryService;
 
     @Operation(summary = "Upload a video")
     @PostMapping
@@ -140,15 +144,12 @@ public class VideoController {
     @GetMapping("/history")
     public ResponseEntity<List<SimpleVideoResponseDto>> getHistory(Authentication authentication) {
         User user = userService.findByEmail(authentication.getName()).orElseThrow(() -> new UnauthorizedException("Unauthorized"));
-        List<SimpleVideoResponseDto> history = user.getHistory().stream()
-                .map(video -> new SimpleVideoResponseDto(
-                        video.getId(),
-                        video.getPreviewUrl(),
-                        video.getTitle(),
-                        video.getAuthor().getId(),
-                        video.getAuthor().getName(),
-                        video.getAuthor().getImageUrl()
-                ))
+        List<SimpleVideoResponseDto> history = historyEntryService.findByUserId(user.getId()).stream()
+                .sorted(Comparator.comparing(HistoryEntry::getTimestamp).reversed())
+                .map(entry -> {
+                    Video video = videoService.findVideoById(entry.getVideoId()).orElseThrow(() -> new NotFoundException("Video [%s] not found".formatted(entry.getVideoId())));
+                    return new SimpleVideoResponseDto(video.getId(), video.getPreviewUrl(), video.getTitle(), video.getAuthor().getId(), video.getAuthor().getName(), video.getAuthor().getImageUrl());
+                })
                 .toList();
         return ResponseEntity.ok(history);
     }
