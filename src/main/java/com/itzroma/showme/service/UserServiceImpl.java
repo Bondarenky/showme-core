@@ -77,8 +77,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(String userId, MultipartFile image, String name) {
-        String imageUrl = amazonS3Service.uploadFile(image, FileType.AVATAR, userId);
-        userRepository.updateUser(userId, imageUrl, name);
+        String imageUrl = null;
+        if (image.getOriginalFilename() != null && !image.getOriginalFilename().isEmpty()) {
+            imageUrl = amazonS3Service.uploadFile(image, FileType.AVATAR, userId);
+        }
+        if (imageUrl == null) {
+            userRepository.updateUser(userId, name);
+        } else {
+            userRepository.updateUserWithImage(userId, imageUrl, name);
+        }
     }
 
     private void validateUser(User user) {
