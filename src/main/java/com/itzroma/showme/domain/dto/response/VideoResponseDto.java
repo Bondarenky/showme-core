@@ -11,6 +11,7 @@ public record VideoResponseDto(
         int likes,
         boolean isLiked,
         int dislikes,
-        boolean isDisliked
+        boolean isDisliked,
+        boolean subscribed
 ) {
 }

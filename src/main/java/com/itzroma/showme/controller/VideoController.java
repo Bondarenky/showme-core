@@ -57,6 +57,7 @@ public class VideoController {
         Video video = videoService.findVideoById(videoId).orElseThrow(
                 () -> new NotFoundException("Video [%s] not found".formatted(videoId))
         );
+        User user = userService.findByEmail(authentication.getName()).orElseThrow(() -> new UnauthorizedException("Unauthorized"));
         VideoResponseDto videoResponseDto = new VideoResponseDto(
                 video.getId(),
                 video.getVideoUrl(),
@@ -68,7 +69,8 @@ public class VideoController {
                 video.getLikes().size(),
                 video.getLikes().stream().map(User::getEmail).anyMatch(s -> s.equals(authentication.getName())),
                 video.getDislikes().size(),
-                video.getDislikes().stream().map(User::getEmail).anyMatch(s -> s.equals(authentication.getName()))
+                video.getDislikes().stream().map(User::getEmail).anyMatch(s -> s.equals(authentication.getName())),
+                user.getSubscriptions().contains(video.getAuthor())
         );
         return ResponseEntity.ok(videoResponseDto);
     }

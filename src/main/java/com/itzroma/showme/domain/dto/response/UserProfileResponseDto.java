@@ -7,6 +7,7 @@ public record UserProfileResponseDto(
         String userName,
         String userEmail,
         String userImageUrl,
+        boolean subscribed,
         List<SimpleVideoResponseDto> videos
 ) {
 }

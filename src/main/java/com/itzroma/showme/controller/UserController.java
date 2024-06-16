@@ -6,6 +6,7 @@ import com.itzroma.showme.domain.dto.response.SubscriberResponseDto;
 import com.itzroma.showme.domain.dto.response.UserProfileResponseDto;
 import com.itzroma.showme.domain.entity.User;
 import com.itzroma.showme.exception.NotFoundException;
+import com.itzroma.showme.exception.UnauthorizedException;
 import com.itzroma.showme.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class UserController {
 
     @Operation(summary = "Return user info by user id")
     @GetMapping("/{userId}")
-    public ResponseEntity<UserProfileResponseDto> profile(@PathVariable String userId) {
+    public ResponseEntity<UserProfileResponseDto> profile(@PathVariable String userId, Authentication authentication) {
         User user = userService.findById(userId).orElseThrow(
                 () -> new NotFoundException("User [%s] not found".formatted(userId))
         );
@@ -38,7 +39,9 @@ public class UserController {
                         video.getAuthor().getImageUrl()
                 ))
                 .toList();
-        return ResponseEntity.ok(new UserProfileResponseDto(user.getId(), user.getName(), user.getEmail(), user.getImageUrl(), videos));
+        User current = authentication == null ? null : userService.findByEmail(authentication.getName()).orElseThrow(() -> new UnauthorizedException("Unauthorized"));
+        boolean subscribed = current != null && current.getSubscriptions().contains(user);
+        return ResponseEntity.ok(new UserProfileResponseDto(user.getId(), user.getName(), user.getEmail(), user.getImageUrl(), subscribed, videos));
     }
 
     @Operation(summary = "Update user's profile picture")
