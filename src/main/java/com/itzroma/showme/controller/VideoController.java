@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -45,13 +46,18 @@ public class VideoController {
         User user = userService.findByEmail(authentication.getName()).orElseThrow(
                 () -> new UnauthorizedException("Unauthorized")
         );
-        List<VideoType> types = Arrays.stream(videoTypes.split(","))
-                .map(String::trim)
-                .filter(String::isEmpty)
-                .map(String::toLowerCase)
-                .map(StringUtils::capitalize)
-                .map(s -> videoTypeService.save(new VideoType(s)))
-                .toList();
+        List<VideoType> types;
+        if (videoTypes == null || videoTypes.trim().isEmpty()) {
+            types = Collections.emptyList();
+        } else {
+            types = Arrays.stream(videoTypes.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .map(String::toLowerCase)
+                    .map(StringUtils::capitalize)
+                    .map(s -> videoTypeService.save(new VideoType(s)))
+                    .toList();
+        }
         Video uploadedVideo = videoService.uploadVideo(video, preview, user, title, description, types);
         return ResponseEntity.ok("Video uploaded: " + uploadedVideo.getTitle());
     }
