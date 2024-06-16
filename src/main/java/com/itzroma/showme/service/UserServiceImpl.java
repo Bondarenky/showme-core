@@ -49,13 +49,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateImage(String userId, MultipartFile file) {
-        String imageUrl = amazonS3Service.uploadFile(file, FileType.AVATAR, userId);
-        userRepository.updateImage(userId, imageUrl);
-        return imageUrl;
-    }
-
-    @Override
     public String subscribe(User user, User... subscribeTo) {
         user.getSubscriptions().addAll(List.of(subscribeTo));
         userRepository.save(user);
@@ -80,6 +73,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateHistory(User user, Video video) {
         historyEntryService.save(new HistoryEntry(user.getId(), video.getId()));
+    }
+
+    @Override
+    public void updateUser(String userId, MultipartFile image, String name) {
+        String imageUrl = amazonS3Service.uploadFile(image, FileType.AVATAR, userId);
+        userRepository.updateUser(userId, imageUrl, name);
     }
 
     private void validateUser(User user) {

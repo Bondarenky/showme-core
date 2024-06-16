@@ -44,13 +44,6 @@ public class UserController {
         return ResponseEntity.ok(new UserProfileResponseDto(user.getId(), user.getName(), user.getEmail(), user.getImageUrl(), subscribed, videos));
     }
 
-    @Operation(summary = "Update user's profile picture")
-    @PostMapping("/{userId}/avatar")
-    public ResponseEntity<String> uploadAvatar(@PathVariable String userId, @RequestParam("file") MultipartFile file) {
-        String newImageUrl = userService.updateImage(userId, file);
-        return ResponseEntity.ok(newImageUrl);
-    }
-
     @PostMapping("/{userId}/toggle-sub")
     public ResponseEntity<String> toggleSub(@PathVariable String userId, Authentication authentication) {
         User sub = userService.findById(userId).orElseThrow(
@@ -94,5 +87,11 @@ public class UserController {
                 })
                 .toList();
         return ResponseEntity.ok(subsVideos);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<String> update(@PathVariable String userId, @RequestParam("image") MultipartFile file, @RequestParam String name) {
+        userService.updateUser(userId, file, name);
+        return ResponseEntity.ok("User updated");
     }
 }

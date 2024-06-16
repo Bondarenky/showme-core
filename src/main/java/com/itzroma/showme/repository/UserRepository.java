@@ -25,14 +25,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Transactional
     @Modifying
     @Query("UPDATE User u " +
-            "SET u.imageUrl = ?2 " +
+            "SET u.name = ?3, u.imageUrl = ?2 " +
             "WHERE u.id = ?1")
-    void updateImage(String userId, String imageUrl);
-
-    @Transactional
-    @Modifying
-    @Query("UPDATE User u " +
-            "SET u.imageUrl = NULL " +
-            "WHERE u.id = ?1")
-    void updateImageByUserId(String userId);
+    void updateUser(String userId, String imageUrl, String name);
 }
