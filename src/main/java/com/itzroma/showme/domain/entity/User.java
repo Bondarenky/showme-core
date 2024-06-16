@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -38,25 +36,25 @@ public class User {
     private String imageUrl;
 
     @OneToMany(mappedBy = "author")
-    private Set<Video> myVideos = new LinkedHashSet<>();
+    private List<Video> myVideos = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "liked_videos",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "video_id"))
-    private Set<Video> likedVideos = new LinkedHashSet<>();
+    private List<Video> likedVideos = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "disliked_videos",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "video_id"))
-    private Set<Video> dislikedVideos = new LinkedHashSet<>();
+    private List<Video> dislikedVideos = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "subscriptions",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "subscribed_to_id"))
-    private Set<User> subscriptions = new LinkedHashSet<>();
+    private List<User> subscriptions = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "history",
@@ -72,16 +70,8 @@ public class User {
         this.password = password;
     }
 
-    public void addSubscribers(int count) {
-        subscribersCount += count;
-    }
-
     public void incrementSubscribers() {
         subscribersCount++;
-    }
-
-    public void removeSubscribers(int count) {
-        subscribersCount -= count;
     }
 
     public void decrementSubscribers() {

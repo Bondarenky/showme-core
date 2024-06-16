@@ -11,10 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,22 +52,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String subscribe(User user, User... subscribeTo) {
-        user.getSubscriptions().addAll(Set.of(subscribeTo));
+        user.getSubscriptions().addAll(List.of(subscribeTo));
         userRepository.save(user);
 
         Arrays.stream(subscribeTo).forEach(User::incrementSubscribers);
-        userRepository.saveAll(Set.of(subscribeTo));
+        userRepository.saveAll(List.of(subscribeTo));
 
         return "Subscribed to " + Arrays.stream(subscribeTo).map(User::getName).collect(Collectors.joining(", "));
     }
 
     @Override
     public String unsubscribe(User user, User... unsubscribeFrom) {
-        user.getSubscriptions().removeAll(Set.of(unsubscribeFrom));
+        user.getSubscriptions().removeAll(List.of(unsubscribeFrom));
         userRepository.save(user);
 
         Arrays.stream(unsubscribeFrom).forEach(User::decrementSubscribers);
-        userRepository.saveAll(Set.of(unsubscribeFrom));
+        userRepository.saveAll(List.of(unsubscribeFrom));
 
         return "Unsubscribed from " + Arrays.stream(unsubscribeFrom).map(User::getName).collect(Collectors.joining(", "));
     }
