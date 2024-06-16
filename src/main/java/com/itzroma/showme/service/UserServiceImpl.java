@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateHistory(User user, Video video) {
         user.getHistory().remove(video);
-        user.getHistory().add(video);
+        user.getHistory().add(0, video);
         userRepository.save(user);
     }
 

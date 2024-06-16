@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -60,7 +62,7 @@ public class User {
     @JoinTable(name = "history",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "video_id"))
-    private Set<Video> history = new LinkedHashSet<>();
+    private List<Video> history = new ArrayList<>();
 
     private Long subscribersCount = 0L;
 

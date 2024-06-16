@@ -19,8 +19,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -139,8 +139,8 @@ public class VideoController {
     @GetMapping("/history")
     public ResponseEntity<List<SimpleVideoResponseDto>> getHistory(Authentication authentication) {
         User user = userService.findByEmail(authentication.getName()).orElseThrow(() -> new UnauthorizedException("Unauthorized"));
-        List<SimpleVideoResponseDto> history = user.getHistory().stream()
-                .sorted(Collections.reverseOrder())
+        List<SimpleVideoResponseDto> history = new ArrayList<>();
+        user.getHistory().stream()
                 .map(video -> new SimpleVideoResponseDto(
                         video.getId(),
                         video.getPreviewUrl(),
@@ -149,7 +149,7 @@ public class VideoController {
                         video.getAuthor().getName(),
                         video.getAuthor().getImageUrl()
                 ))
-                .toList();
+                .forEach(dto -> history.add(0, dto));
         return ResponseEntity.ok(history);
     }
 }
