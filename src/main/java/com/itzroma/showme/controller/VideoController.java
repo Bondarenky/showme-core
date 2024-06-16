@@ -47,6 +47,7 @@ public class VideoController {
         );
         List<VideoType> types = Arrays.stream(videoTypes.split(","))
                 .map(String::trim)
+                .filter(String::isEmpty)
                 .map(String::toLowerCase)
                 .map(StringUtils::capitalize)
                 .map(s -> videoTypeService.save(new VideoType(s)))
